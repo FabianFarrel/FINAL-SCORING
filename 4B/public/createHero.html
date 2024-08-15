@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Hero</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-dark text-light">
+    <div class="container mt-5 p-4 rounded" style="max-width: 600px; background-color: #343a40;">
+        <h1 class="text-center mb-4 text-warning">Add Hero</h1>
+        <form id="createHeroForm">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label>
+                <input type="text" class="form-control bg-dark text-light border-warning" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="type_id" class="form-label">Type ID:</label>
+                <input type="number" class="form-control bg-dark text-light border-warning" id="type_id" name="type_id" required>
+            </div>
+            <div class="mb-3">
+                <label for="photo" class="form-label">Photo URL:</label>
+                <input type="text" class="form-control bg-dark text-light border-warning" id="photo" name="photo" required>
+            </div>
+            <input type="hidden" id="user_id" value="1">
+            <button type="submit" class="btn btn-success w-100">Add Hero</button>
+        </form>
+        <button class="btn btn-secondary w-100 mt-3" onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('createHeroForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const type_id = document.getElementById('type_id').value;
+            const photo = document.getElementById('photo').value;
+            const user_id = document.getElementById('user_id').value;
+
+            const response = await fetch('/api/heroes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, type_id, photo, user_id }),
+            });
+
+            if (response.ok) {
+                alert('Hero added successfully!');
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('Error adding hero.');
+            }
+        });
+    </script>
+</body>
+</html>

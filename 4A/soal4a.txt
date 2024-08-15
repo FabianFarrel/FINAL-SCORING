@@ -1,0 +1,16 @@
+- Menampilkan seluruh data dari tabel heroes beserta type dari hero tersebut:
+SELECT heroes_tb.*, type_tb.name AS type_name
+FROM heroes_tb
+JOIN type_tb ON heroes_tb.type_id = type_tb.id;
+
+- Menampilkan seluruh data heroes berdasarkan type tertentu:
+SELECT heroes_tb.*, type_tb.name AS type_name
+FROM heroes_tb
+JOIN type_tb ON heroes_tb.type_id = type_tb.id
+WHERE type_tb.name = 'Mage';
+
+- Menampilkan spesifik data heroes dengan type-nya:
+SELECT heroes_tb.*, type_tb.name AS type_name
+FROM heroes_tb
+JOIN type_tb ON heroes_tb.type_id = type_tb.id
+WHERE heroes_tb.name = 'Ashe';

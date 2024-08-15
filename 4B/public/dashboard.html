@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://www.transparenttextures.com/patterns/space.png'); 
+            background-size: cover;
+            color: #e0e0e0; 
+            padding-top: 20px;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .hero-card {
+            border: 1px solid #444; 
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: #222; 
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+        .hero-photo {
+            width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            border: 2px solid #f39c12; 
+        }
+        .hero-info {
+            text-align: center;
+        }
+        .btn-primary, .btn-secondary, .btn-info, .btn-warning, .btn-danger {
+            border-radius: 0.25rem;
+        }
+        .btn-info {
+            background-color: #cb9318; 
+            border: none;
+        }
+        .btn-warning {
+            background-color: #ffc107; 
+            border: none;
+        }
+        .btn-danger {
+            background-color: #dc3545; 
+            border: none;
+        }
+        .btn-primary {
+            background-color: #f39c12; 
+            border: none;
+        }
+        .btn-secondary {
+            background-color: #6c757d; 
+            border: none;
+        }
+        .btn-primary:hover, .btn-secondary:hover, .btn-info:hover, .btn-warning:hover, .btn-danger:hover {
+            opacity: 0.9; 
+        }
+        .list-group-item {
+            background-color: #333; 
+            color: #e0e0e0; 
+            border: 1px solid #444; 
+        }
+        .list-group-item:hover {
+            background-color: #444; 
+        }
+        .text-info {
+            color: #c99e11; 
+        }
+        .text-warning {
+            color: #ffc107; 
+        }
+        .text-danger {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body class="bg-dark text-light">
+    <div class="container">
+        <h1 class="text-center mb-4">LEAGUE OF LEGENDS</h1>
+        <div id="authActions" class="text-center mb-4">
+            <button id="addHeroBtn" class="btn btn-primary" style="display: none;" onclick="window.location.href='createHero.html'">Add Hero</button>
+            <button id="addTypeBtn" class="btn btn-primary" style="display: none;" onclick="window.location.href='createType.html'">Add Type</button>
+            <button id="loginBtn" class="btn btn-secondary" onclick="window.location.href='login.html'">Login</button>
+            <button id="logoutBtn" class="btn btn-danger" style="display: none;" onclick="logout()">Logout</button>
+        </div>
+        <h2 class="text-info"></h2>
+        <div id="heroesContainer" class="row"></div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Check authentication status 
+        function checkAuthStatus() {
+            const token = localStorage.getItem('token');
+            const isLoggedIn = token !== null;
+            
+            document.getElementById('addHeroBtn').style.display = isLoggedIn ? 'inline-block' : 'none';
+            document.getElementById('addTypeBtn').style.display = isLoggedIn ? 'inline-block' : 'none';
+            document.getElementById('loginBtn').style.display = isLoggedIn ? 'none' : 'inline-block';
+            document.getElementById('logoutBtn').style.display = isLoggedIn ? 'inline-block' : 'none';
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            checkAuthStatus();
+            window.location.href = 'index.html';
+        }
+
+        // Fetch heroes from API
+        async function fetchHeroes() {
+            const response = await fetch('/api/heroes');
+            const heroes = await response.json();
+            const heroesContainer = document.getElementById('heroesContainer');
+            heroesContainer.innerHTML = '';
+            heroes.forEach(hero => {
+                const col = document.createElement('div');
+                col.className = 'col-md-4';
+                col.innerHTML = `
+                    <div class="hero-card">
+                        <img src="${hero.photo}" alt="${hero.name}" class="hero-photo">
+                        <div class="hero-info">
+                            <h3>${hero.name}</h3>
+                            <p>${hero.type_name}</p>
+                            <a href="detail.html?id=${hero.id}" class="btn btn-danger btn-m btn-block">Detail</a>
+                            
+                        </div>
+                    </div>
+                `;
+                heroesContainer.appendChild(col);
+            });
+        }
+
+        // Delete a hero
+        async function deleteHero(id) {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`/api/heroes/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                alert('Hero deleted successfully!');
+                fetchHeroes(); 
+            } else {
+                alert('Error deleting hero.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuthStatus();
+            fetchHeroes();
+        });
+    </script>
+</body>
+</html>
