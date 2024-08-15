@@ -12,24 +12,24 @@ function recursiveBubbleSort(arr, n) {
 function sortArray(data) {
     const n = data.length;
     recursiveBubbleSort(data, n);
-    const odds = [];
-    const evens = [];
+    const ganjil = [];
+    const genap = [];
     for (let i = 0; i < n; i++) {
         if (data[i] % 2 === 0) {
-            evens.push(data[i]);
+            genap.push(data[i]);
         } else {
-            odds.push(data[i]);
+            ganjil.push(data[i]);
         }
     }
     return {
         sortedArray: data,
-        odds: odds,
-        evens: evens
+        ganjil: ganjil,
+        genap: genap
     };
 }
 
 const result = sortArray([2, 24, 32, 22, 31, 100, 56, 21, 99, 7, 5, 37, 97, 25, 13, 11]);
 
-console.log("Arrays:", result.sortedArray.join(", "));
-console.log("Odd:", result.odds.join(", "));
-console.log("Evens:", result.evens.join(", "));
+console.log("Array:", result.sortedArray.join(", "));
+console.log("Ganjil:", result.ganjil.join(", "));
+console.log("Genap:", result.genap.join(", "));
